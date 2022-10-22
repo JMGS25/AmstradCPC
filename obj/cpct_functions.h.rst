@@ -9,3 +9,4 @@ Hexadecimal [16-Bits]
                               4 
                               5 .globl cpct_getScreenPtr_asm
                               6 .globl cpct_drawSolidBox_asm
+                              7 .globl cpct_disableFirmware_asm

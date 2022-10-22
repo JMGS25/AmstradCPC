@@ -1,10 +1,11 @@
 DEF .__.ABS. 0x0
 DEF l__DATA 0x0
 DEF max_entities 0x3
-DEF entity_size 0x7
 DEF l__CODE 0x152
 DEF s__CODE 0x4000
 DEF s__DATA 0x4152
+DEF player 0x4000
+DEF enemy 0x4007
 DEF _main 0x400E
 DEF sys_render_init 0x402B
 DEF sys_render_update 0x402C

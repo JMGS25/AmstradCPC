@@ -18,6 +18,7 @@ Hexadecimal [16-Bits]
                               4 
                               5 .globl cpct_getScreenPtr_asm
                               6 .globl cpct_drawSolidBox_asm
+                              7 .globl cpct_disableFirmware_asm
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 3.
 Hexadecimal [16-Bits]
 
@@ -35,7 +36,41 @@ Hexadecimal [16-Bits]
                               9 .globl man_entity_create
                              10 
                              11 ;; CONSTANTS
-                             12 .globl entity_size
+                             12 ;.globl entity_size
+                             13 
+                             14 ;; Entity DEFINITION MACRO
+                             15 ;; using a macro allows changing order more easily 
+                             16 .macro DefineEntityAnnonimous _x, _y, _vx, _vy, _w, _h, _color
+                             17    .db _x 
+                             18    .db _y 
+                             19    .db _w 
+                             20    .db _h
+                             21    .db _vx 
+                             22    .db _vy 
+                             23    .db _color
+                             24 .endm
+                             25 
+                             26 .macro DefineEntity _name, _x, _y, _vx, _vy, _w, _h, _color
+                             27     _name::
+                             28         DefineEntityAnnonimous _x, _y, _vx, _vy, _w, _h, _color
+                             29 .endm
+                             30 
+                     0000    31 e_x = 0
+                     0001    32 e_y = 1
+                     0002    33 e_w = 2
+                     0003    34 e_h = 3
+                     0004    35 e_vx = 4
+                     0005    36 e_vy = 5
+                     0006    37 e_col = 6
+                     0007    38 sizeof_e = 7
+                             39 
+                             40 
+                             41 .macro DefineEntityArray _name, _N
+                             42     _name::
+                             43         .rept _N
+                             44             DefineEntityAnnonimous 0xDE, 0xAD, 0xDE, 0xAD, 0xDE, 0xAD, 0xAA ;;code initial : DEAD DEAD DEAD
+                             45         .endm
+                             46 .endm
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 4.
 Hexadecimal [16-Bits]
 
@@ -57,26 +92,26 @@ Hexadecimal [16-Bits]
    402C F5            [11]   19     push af         ; save number of entities on the stack
                              20 
                              21     ;;Calculate a video-memory location for printing 
-   402D 11 00 C0      [10]   22     ld de, #0xC000  ; DE = pointer to start video memory position
-   4030 DD 4E 00      [19]   23     ld c, 0(ix)     ; C  = x
-   4033 DD 46 01      [19]   24     ld b, 1(ix)     ; B  = y
+   402D 11 00 C0      [10]   22     ld de, #0xC000      ; DE = pointer to start video memory position
+   4030 DD 4E 00      [19]   23     ld c, e_x(ix)       ; C  = x
+   4033 DD 46 01      [19]   24     ld b, e_y(ix)       ; B  = y
    4036 CD 3F 41      [17]   25     call cpct_getScreenPtr_asm  ;calculate video memory position in DE
                              26 
                              27     ;;Draw the entity
-   4039 EB            [ 4]   28     ex de, hl       ; HL = position
-   403A DD 7E 06      [19]   29     ld a, 6(ix)     ; A  = color
-   403D DD 4E 02      [19]   30     ld c, 2(ix)     ; C  = width
-   4040 DD 46 03      [19]   31     ld b, 3(ix)     ; B  = heigh
+   4039 EB            [ 4]   28     ex de, hl           ; HL = position
+   403A DD 7E 06      [19]   29     ld a, e_col(ix)     ; A  = color
+   403D DD 4E 02      [19]   30     ld c, e_w(ix)       ; C  = width
+   4040 DD 46 03      [19]   31     ld b, e_h(ix)       ; B  = heigh
    4043 CD 9C 40      [17]   32     call cpct_drawSolidBox_asm  ; draws a solid box
                              33 
-   4046 F1            [10]   34     pop af          ; recover number of entities from the stack
+   4046 F1            [10]   34     pop af              ; recover number of entities from the stack
                              35 
                              36     ;;Check number of entities
-   4047 3D            [ 4]   37     dec a           ; decrements number of entities to draw
-   4048 C8            [11]   38     ret z           ; if zero entities exit
+   4047 3D            [ 4]   37     dec a               ; decrements number of entities to draw
+   4048 C8            [11]   38     ret z               ; if zero entities exit
                              39 
                              40     ;;Point to next entity 
-   4049 01 07 00      [10]   41     ld bc, #entity_size
+   4049 01 07 00      [10]   41     ld bc, #sizeof_e
    404C DD 09         [15]   42     add ix, bc
    404E 18 DC         [12]   43     jr _renloop
                              44 

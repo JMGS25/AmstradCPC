@@ -10,11 +10,9 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000000  .__.ABS.                           cpct_firmware
      00000000  l__DATA                         
      00000003  max_entities                       
-     00000007  entity_size                        
      00000152  l__CODE                         
      00004000  s__CODE                         
      00004152  s__DATA                         
-
 ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
 Hexadecimal  [32-Bits]
 
@@ -24,6 +22,8 @@ _CODE                               00004000    00000152 =         338. bytes (R
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
+     00004000  player                             cpct_keyboard
+     00004007  enemy                              cpct_keyboard
      0000400E  _main                              cpct_keyboard
      0000402B  sys_render_init                    
      0000402C  sys_render_update                  
@@ -40,7 +40,6 @@ _CODE                               00004000    00000152 =         338. bytes (R
      0000409C  cpct_drawSolidBox_asm              cpct_sprites
      0000413F  cpct_getScreenPtr_asm              cpct_video
      00004151  _cpct_mode_rom_status              cpct_firmware
-
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 
 Files Linked                              [ module(s) ]
