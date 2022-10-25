@@ -32,10 +32,20 @@ Hexadecimal [16-Bits]
 
 
                               5 .include "assets/assets.h.s"
-                              1 .globl _pal_main
-                              2 .globl _sp_mainchar
-                              3 .globl _sp_redball
-                              4 .globl _sp_sword
+                              1 
+                              2 ;;==============================
+                              3 ;;  Sprites
+                              4 .globl _pal_main
+                              5 .globl _sp_player
+                              6 .globl _sp_enemy
+                              7 .globl _sp_enemy2
+                              8 
+                              9 
+                             10 
+                             11 ;;==============================
+                             12 ;;  Constants
+                     0008    13 MAIN_CHAR_WIDTH = 8
+                     0010    14 MAIN_CHAR_HEIGHT = 16
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 4.
 Hexadecimal [16-Bits]
 
@@ -5099,20 +5109,20 @@ Hexadecimal [16-Bits]
                              25 ;;  DESTROYS: AF, BC, DE, HL
                              26 ;;
                              27 
-   4231                      28 sys_eren_init::
-   4231 0E 00         [ 7]   29     ld c, #0                        ;; Mode 0
-   4233 CD 70 44      [17]   30     call cpct_setVideoMode_asm      ;; Set video mode
-   4236 21 80 41      [10]   31     ld hl, #_pal_main               ;; hl = palette
-   4239 11 10 00      [10]   32     ld de, #16                      ;; de = size of palette
-   423C CD 95 43      [17]   33     call cpct_setPalette_asm
+   4221                      28 sys_eren_init::
+   4221 0E 00         [ 7]   29     ld c, #0                        ;; Mode 0
+   4223 CD 60 44      [17]   30     call cpct_setVideoMode_asm      ;; Set video mode
+   4226 21 80 41      [10]   31     ld hl, #_pal_main               ;; hl = palette
+   4229 11 10 00      [10]   32     ld de, #16                      ;; de = size of palette
+   422C CD 85 43      [17]   33     call cpct_setPalette_asm
    000E                      34     cpctm_setBorder_asm HW_WHITE    ;;set border grey
                               1    .radix h
    000E                       2    cpctm_setBorder_raw_asm \HW_WHITE ;; [28] Macro that does the job, but requires a number value to be passed
                               1    .globl cpct_setPALColour_asm
-   423F 21 10 00      [10]    2    ld   hl, #0x010         ;; [3]  H=Hardware value of desired colour, L=Border INK (16)
-   4242 CD B4 43      [17]    3    call cpct_setPALColour_asm  ;; [25] Set Palette colour of the border
+   422F 21 10 00      [10]    2    ld   hl, #0x010         ;; [3]  H=Hardware value of desired colour, L=Border INK (16)
+   4232 CD A4 43      [17]    3    call cpct_setPALColour_asm  ;; [25] Set Palette colour of the border
                               3    .radix d
-   4245 C9            [10]   35     ret
+   4235 C9            [10]   35     ret
                              36 
                              37 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                              38 ;;  ENTITY RENDER UPDATE
@@ -5124,11 +5134,11 @@ Hexadecimal [16-Bits]
                              44 ;;       A : number of entities to render
                              45 ;;  DESTROYS: AF, HL, BC, DE, IX
                              46 ;;  Stack use: 2 bytes
-   4246                      47 sys_eren_update::
+   4236                      47 sys_eren_update::
                              48     ;;Render entities
                              49     ;;TENDRA QUE LLAMAR A RENDER DE OTRAS COSAS
-   4246 CD 4A 42      [17]   50     call sys_eren_render_entities   ;; render all entities
-   4249 C9            [10]   51     ret
+   4236 CD 3A 42      [17]   50     call sys_eren_render_entities   ;; render all entities
+   4239 C9            [10]   51     ret
                              52 
                              53 
                              54 
@@ -5147,46 +5157,46 @@ Hexadecimal [16-Bits]
                              62 ;;       A : number of entities to render
                              63 ;;  DESTROYS: AF, HL, BC, DE, IX
                              64 ;;  Stack use: 2 bytes
-   424A                      65 sys_eren_render_entities::
-   424A 32 7C 42      [13]   66     ld (_ent_counter), a        ;;save entity in counter number of entities
+   423A                      65 sys_eren_render_entities::
+   423A 32 6C 42      [13]   66     ld (_ent_counter), a        ;;save entity in counter number of entities
                              67 
-   424D                      68 _update_loop:
+   423D                      68 _update_loop:
                              69     ;;Erase previous instance (draw background pixels)
-   424D DD 5E 08      [19]   70     ld e, e_lastVP_l(ix)    
-   4250 DD 56 09      [19]   71     ld d, e_lastVP_h(ix)            ;; de = last video memory position
-   4253 AF            [ 4]   72     xor a                           ;; a = 0 = background
-   4254 DD 4E 04      [19]   73     ld c, e_w(ix)                   ;; c = width
-   4257 DD 46 05      [19]   74     ld b, e_h(ix)                   ;; b = height
-   425A C5            [11]   75     push bc                         ;; save in stack wh
-   425B CD 8D 44      [17]   76     call cpct_drawSolidBox_asm      ;; draw the box
+   423D DD 5E 08      [19]   70     ld e, e_lastVP_l(ix)    
+   4240 DD 56 09      [19]   71     ld d, e_lastVP_h(ix)            ;; de = last video memory position
+   4243 AF            [ 4]   72     xor a                           ;; a = 0 = background
+   4244 DD 4E 04      [19]   73     ld c, e_w(ix)                   ;; c = width
+   4247 DD 46 05      [19]   74     ld b, e_h(ix)                   ;; b = height
+   424A C5            [11]   75     push bc                         ;; save in stack wh
+   424B CD 7D 44      [17]   76     call cpct_drawSolidBox_asm      ;; draw the box
                              77 
                              78     ;;Callculate new video memory pointer
-   425E 11 00 C0      [10]   79     ld de, #screen_start            ;; de = 0xc0000
-   4261 DD 4E 00      [19]   80     ld c, e_x(ix)                   ;; c = entity.x
-   4264 DD 46 01      [19]   81     ld b, e_y(ix)                   ;; b = entity.y
-   4267 CD 31 45      [17]   82     call cpct_getScreenPtr_asm      ;; Hl = memory position 
+   424E 11 00 C0      [10]   79     ld de, #screen_start            ;; de = 0xc0000
+   4251 DD 4E 00      [19]   80     ld c, e_x(ix)                   ;; c = entity.x
+   4254 DD 46 01      [19]   81     ld b, e_y(ix)                   ;; b = entity.y
+   4257 CD 21 45      [17]   82     call cpct_getScreenPtr_asm      ;; Hl = memory position 
                              83 
                              84     ;;Save memory position at pointer to last
-   426A DD 75 08      [19]   85     ld e_lastVP_l(ix), l            
-   426D DD 74 09      [19]   86     ld e_lastVP_h(ix), h 
+   425A DD 75 08      [19]   85     ld e_lastVP_l(ix), l            
+   425D DD 74 09      [19]   86     ld e_lastVP_h(ix), h 
                              87 
                              88     ;;Draw entity sprite
-   4270 EB            [ 4]   89     ex de, hl                       ;; de = memory position
-   4271 DD 6E 06      [19]   90     ld l, e_pspr_l(ix)
-   4274 DD 66 07      [19]   91     ld h, e_pspr_h(ix)              ;; hl = pointer to sprite
-   4277 C1            [10]   92     pop bc                          ;; bc = width and height
-   4278 CD BE 43      [17]   93     call cpct_drawSprite_asm
+   4260 EB            [ 4]   89     ex de, hl                       ;; de = memory position
+   4261 DD 6E 06      [19]   90     ld l, e_pspr_l(ix)
+   4264 DD 66 07      [19]   91     ld h, e_pspr_h(ix)              ;; hl = pointer to sprite
+   4267 C1            [10]   92     pop bc                          ;; bc = width and height
+   4268 CD AE 43      [17]   93     call cpct_drawSprite_asm
                              94 
                              95     ;;Check if no more entites with self-modifying code
                      004B    96     _ent_counter =  .+1               ;; ent counter  = actual position + 1 ----> modify #0
-   427B 3E 00         [ 7]   97     ld a, #0                        ;; a = self-modyfing entity counter
-   427D 3D            [ 4]   98     dec a                           ;; a -- 
-   427E C8            [11]   99     ret z                           ;; if a = 0 exit
+   426B 3E 00         [ 7]   97     ld a, #0                        ;; a = self-modyfing entity counter
+   426D 3D            [ 4]   98     dec a                           ;; a -- 
+   426E C8            [11]   99     ret z                           ;; if a = 0 exit
                             100 
-   427F 32 7C 42      [13]  101     ld (_ent_counter), a            ;; counter = a
-   4282 01 0A 00      [10]  102     ld bc, #sizeof_e                ;; bc = sizeofe
-   4285 DD 09         [15]  103     add ix, bc                      ;; ix points next entity
-   4287 18 C4         [12]  104     jr _update_loop
+   426F 32 6C 42      [13]  101     ld (_ent_counter), a            ;; counter = a
+   4272 01 0A 00      [10]  102     ld bc, #sizeof_e                ;; bc = sizeofe
+   4275 DD 09         [15]  103     add ix, bc                      ;; ix points next entity
+   4277 18 C4         [12]  104     jr _update_loop
                             105 
                             106 
                             107 

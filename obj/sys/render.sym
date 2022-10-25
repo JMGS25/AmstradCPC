@@ -53,27 +53,28 @@ Symbol Table
     Key_Spac=  8005     |     Key_T   =  0806     |     Key_Tab =  1008 
     Key_U   =  0405     |     Key_V   =  8006     |     Key_W   =  0807 
     Key_X   =  8007     |     Key_Y   =  0805     |     Key_Z   =  8008 
-    PAL_INKR=  0040     |     PAL_PENR=  0000     |     PPI_PORT=  00F5 
-  0 _ent_cou=  004B R   |     _pal_mai   **** GX  |     _sp_main   **** GX
-    _sp_redb   **** GX  |     _sp_swor   **** GX  |   0 _update_   001C R
-    cpct_dis   **** GX  |     cpct_dra   **** GX  |     cpct_dra   **** GX
-    cpct_get   **** GX  |     cpct_isK   **** GX  |     cpct_pag=  0000 
+    MAIN_CHA=  0010     |     MAIN_CHA=  0008     |     PAL_INKR=  0040 
+    PAL_PENR=  0000     |     PPI_PORT=  00F5     |   0 _ent_cou=  004B R
+    _pal_mai   **** GX  |     _sp_enem   **** GX  |     _sp_enem   **** GX
+    _sp_play   **** GX  |   0 _update_   001C R   |     cpct_dis   **** GX
+    cpct_dra   **** GX  |     cpct_dra   **** GX  |     cpct_get   **** GX
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 2.
 Hexadecimal [16-Bits]
 
 Symbol Table
 
-    cpct_pag=  0010     |     cpct_pag=  0020     |     cpct_pag=  0030 
-    cpct_sca   **** GX  |     cpct_set   **** GX  |     cpct_set   **** GX
-    cpct_set   **** GX  |     cpct_wai   **** GX  |     e_h     =  0005 
-    e_lastVP=  0009     |     e_lastVP=  0008     |     e_pspr_h=  0007 
-    e_pspr_l=  0006     |     e_vx    =  0002     |     e_vy    =  0003 
-    e_w     =  0004     |     e_x     =  0000     |     e_y     =  0001 
-    firmware=  0038     |     man_enti   **** GX  |     man_enti   **** GX
-    man_enti   **** GX  |     man_enti   **** GX  |     opc_DI  =  00F3 
-    opc_EI  =  00FB     |     opc_JR  =  0018     |     opc_LD_D=  0016 
-    screen_s=  C000     |     sizeof_e=  000A     |   0 sys_eren   0000 GR
-  0 sys_eren   0019 GR  |   0 sys_eren   0015 GR
+    cpct_isK   **** GX  |     cpct_pag=  0000     |     cpct_pag=  0010 
+    cpct_pag=  0020     |     cpct_pag=  0030     |     cpct_sca   **** GX
+    cpct_set   **** GX  |     cpct_set   **** GX  |     cpct_set   **** GX
+    cpct_wai   **** GX  |     e_h     =  0005     |     e_lastVP=  0009 
+    e_lastVP=  0008     |     e_pspr_h=  0007     |     e_pspr_l=  0006 
+    e_vx    =  0002     |     e_vy    =  0003     |     e_w     =  0004 
+    e_x     =  0000     |     e_y     =  0001     |     firmware=  0038 
+    man_enti   **** GX  |     man_enti   **** GX  |     man_enti   **** GX
+    man_enti   **** GX  |     opc_DI  =  00F3     |     opc_EI  =  00FB 
+    opc_JR  =  0018     |     opc_LD_D=  0016     |     screen_s=  C000 
+    sizeof_e=  000A     |   0 sys_eren   0000 GR  |   0 sys_eren   0019 GR
+  0 sys_eren   0015 GR
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 3.
 Hexadecimal [16-Bits]

@@ -15,9 +15,9 @@
 
 ;;===========================================
 ;; Manager MEMBER VARIABLES
-ent1: DefineCmp_Entity 0, 0, 1, 2, 4, 16, _sp_mainchar
-ent2: DefineCmp_Entity 70, 40, 0xFF, 0xFE, 4, 8, _sp_redball
-ent3: DefineCmp_Entity 40, 120, 2, 0xFC, 5, 12, _sp_sword
+ent1: DefineCmp_Entity 0, 0, 1, 2, MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT, _sp_player
+ent2: DefineCmp_Entity 70, 40, 0xFF, 0xFE, MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT, _sp_enemy
+ent3: DefineCmp_Entity 40, 120, 2, 0xFC, MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT, _sp_enemy2
 ;;===========================================
 
 

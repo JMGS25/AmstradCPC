@@ -5082,10 +5082,20 @@ Hexadecimal [16-Bits]
 
 
                               7 .include "assets/assets.h.s"
-                              1 .globl _pal_main
-                              2 .globl _sp_mainchar
-                              3 .globl _sp_redball
-                              4 .globl _sp_sword
+                              1 
+                              2 ;;==============================
+                              3 ;;  Sprites
+                              4 .globl _pal_main
+                              5 .globl _sp_player
+                              6 .globl _sp_enemy
+                              7 .globl _sp_enemy2
+                              8 
+                              9 
+                             10 
+                             11 ;;==============================
+                             12 ;;  Constants
+                     0008    13 MAIN_CHAR_WIDTH = 8
+                     0010    14 MAIN_CHAR_HEIGHT = 16
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 100.
 Hexadecimal [16-Bits]
 
@@ -5101,23 +5111,23 @@ Hexadecimal [16-Bits]
                              15 
                              16 ;;===========================================
                              17 ;; Manager MEMBER VARIABLES
-   0000                      18 ent1: DefineCmp_Entity 0, 0, 1, 2, 4, 16, _sp_mainchar
+   0000                      18 ent1: DefineCmp_Entity 0, 0, 1, 2, MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT, _sp_player
    0000 00 00                 1    .db 0, 0                   ; Position x, y
    0002 01 02                 2    .db 1, 2                 ; Velocity x, y
-   0004 04 10                 3    .db 4, 16                   ; Width, height 
-   0006 00 00                 4    .dw _sp_mainchar                    ; pointer to sprite             
+   0004 08 10                 3    .db MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT                   ; Width, height 
+   0006 00 00                 4    .dw _sp_player                    ; pointer to sprite             
    0008 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
-   000A                      19 ent2: DefineCmp_Entity 70, 40, 0xFF, 0xFE, 4, 8, _sp_redball
+   000A                      19 ent2: DefineCmp_Entity 70, 40, 0xFF, 0xFE, MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT, _sp_enemy
    000A 46 28                 1    .db 70, 40                   ; Position x, y
    000C FF FE                 2    .db 0xFF, 0xFE                 ; Velocity x, y
-   000E 04 08                 3    .db 4, 8                   ; Width, height 
-   0010 00 00                 4    .dw _sp_redball                    ; pointer to sprite             
+   000E 08 10                 3    .db MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT                   ; Width, height 
+   0010 00 00                 4    .dw _sp_enemy                    ; pointer to sprite             
    0012 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
-   0014                      20 ent3: DefineCmp_Entity 40, 120, 2, 0xFC, 5, 12, _sp_sword
+   0014                      20 ent3: DefineCmp_Entity 40, 120, 2, 0xFC, MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT, _sp_enemy2
    0014 28 78                 1    .db 40, 120                   ; Position x, y
    0016 02 FC                 2    .db 2, 0xFC                 ; Velocity x, y
-   0018 05 0C                 3    .db 5, 12                   ; Width, height 
-   001A 00 00                 4    .dw _sp_sword                    ; pointer to sprite             
+   0018 08 10                 3    .db MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT                   ; Width, height 
+   001A 00 00                 4    .dw _sp_enemy2                    ; pointer to sprite             
    001C 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
                              21 ;;===========================================
                              22 

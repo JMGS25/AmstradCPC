@@ -1,10 +1,10 @@
 XL2
 H 9 areas 2 global symbols
-M redball
+M enemy
 O -mz80
 S .__.ABS. Def0000
 A _CODE size 80 flags 0 addr 0
-S _sp_redball Def0000
+S _sp_enemy Def0000
 A _DATA size 0 flags 0 addr 0
 A _INITIALIZED size 0 flags 0 addr 0
 A _DABS size 0 flags 8 addr 0

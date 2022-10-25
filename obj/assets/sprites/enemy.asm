@@ -2,13 +2,13 @@
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 3.6.8 #9946 (Linux)
 ;--------------------------------------------------------
-	.module redball
+	.module enemy
 	.optsdcc -mz80
 	
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
-	.globl _sp_redball
+	.globl _sp_enemy
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -41,7 +41,7 @@
 ;--------------------------------------------------------
 	.area _CODE
 	.area _CODE
-_sp_redball:
+_sp_enemy:
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0

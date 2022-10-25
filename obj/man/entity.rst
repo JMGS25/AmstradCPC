@@ -5106,33 +5106,33 @@ Hexadecimal [16-Bits]
                              16 
                              17 ;; -----------------Entity components-------------------
    0000                      18 DefineComponentArrayStructure _entity, max_entities, DefineCmp_Entity_default
-   4289 00                    1     _entity_num:           .db 0                ;;number of defined entities
-   428A 8C 42                 2     _entity_pend:          .dw _entity_array    ;;Pointer to the end of the array (default start of array)
-   428C                       3     _entity_array:                              ;;Array of elements 
+   4279 00                    1     _entity_num:           .db 0                ;;number of defined entities
+   427A 7C 42                 2     _entity_pend:          .dw _entity_array    ;;Pointer to the end of the array (default start of array)
+   427C                       3     _entity_array:                              ;;Array of elements 
                               4     .rept max_entities
                               5         DefineCmp_Entity_default                 ;;Call default constructor _N times
                               6     .endm
    0003                       1         DefineCmp_Entity_default                 ;;Call default constructor _N times
    0003                       1     DefineCmp_Entity 0, 0, 0, 0, 1, 1, 0x0000
-   428C 00 00                 1    .db 0, 0                   ; Position x, y
-   428E 00 00                 2    .db 0, 0                 ; Velocity x, y
-   4290 01 01                 3    .db 1, 1                   ; Width, height 
-   4292 00 00                 4    .dw 0x0000                    ; pointer to sprite             
-   4294 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
+   427C 00 00                 1    .db 0, 0                   ; Position x, y
+   427E 00 00                 2    .db 0, 0                 ; Velocity x, y
+   4280 01 01                 3    .db 1, 1                   ; Width, height 
+   4282 00 00                 4    .dw 0x0000                    ; pointer to sprite             
+   4284 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
    000D                       1         DefineCmp_Entity_default                 ;;Call default constructor _N times
    000D                       1     DefineCmp_Entity 0, 0, 0, 0, 1, 1, 0x0000
-   4296 00 00                 1    .db 0, 0                   ; Position x, y
-   4298 00 00                 2    .db 0, 0                 ; Velocity x, y
-   429A 01 01                 3    .db 1, 1                   ; Width, height 
-   429C 00 00                 4    .dw 0x0000                    ; pointer to sprite             
-   429E 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
+   4286 00 00                 1    .db 0, 0                   ; Position x, y
+   4288 00 00                 2    .db 0, 0                 ; Velocity x, y
+   428A 01 01                 3    .db 1, 1                   ; Width, height 
+   428C 00 00                 4    .dw 0x0000                    ; pointer to sprite             
+   428E 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
    0017                       1         DefineCmp_Entity_default                 ;;Call default constructor _N times
    0017                       1     DefineCmp_Entity 0, 0, 0, 0, 1, 1, 0x0000
-   42A0 00 00                 1    .db 0, 0                   ; Position x, y
-   42A2 00 00                 2    .db 0, 0                 ; Velocity x, y
-   42A4 01 01                 3    .db 1, 1                   ; Width, height 
-   42A6 00 00                 4    .dw 0x0000                    ; pointer to sprite             
-   42A8 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
+   4290 00 00                 1    .db 0, 0                   ; Position x, y
+   4292 00 00                 2    .db 0, 0                 ; Velocity x, y
+   4294 01 01                 3    .db 1, 1                   ; Width, height 
+   4296 00 00                 4    .dw 0x0000                    ; pointer to sprite             
+   4298 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
                              19 
                              20 ;;===========================================================================
                              21 ;;===========================================================================
@@ -5146,10 +5146,10 @@ Hexadecimal [16-Bits]
                              29 ;;  RETURN
                              30 ;;      A : alive entities
                              31 ;;      IX: pointer to the entity array
-   42AA                      32 man_entity_getArray::
-   42AA DD 21 8C 42   [14]   33     ld ix, #_entity_array   ;; IX = pointer to the entity array
-   42AE 3A 89 42      [13]   34     ld a, (_entity_num)   ;; A  = number of entities
-   42B1 C9            [10]   35     ret 
+   429A                      32 man_entity_getArray::
+   429A DD 21 7C 42   [14]   33     ld ix, #_entity_array   ;; IX = pointer to the entity array
+   429E 3A 79 42      [13]   34     ld a, (_entity_num)   ;; A  = number of entities
+   42A1 C9            [10]   35     ret 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 99.
 Hexadecimal [16-Bits]
 
@@ -5163,14 +5163,14 @@ Hexadecimal [16-Bits]
                              41 ;;     Using it makes able to re-game 
                              42 ;;  
                              43 ;;  DESTROYS:  AH, HL
-   42B2                      44 man_entity_init::
-   42B2 AF            [ 4]   45     xor a                       ;; a = 0
-   42B3 32 89 42      [13]   46     ld  (_entity_num), a        ;; value num_entities = 0
+   42A2                      44 man_entity_init::
+   42A2 AF            [ 4]   45     xor a                       ;; a = 0
+   42A3 32 79 42      [13]   46     ld  (_entity_num), a        ;; value num_entities = 0
                              47 
-   42B6 21 8C 42      [10]   48     ld hl, #_entity_array       ;; hl = pointer to first
-   42B9 22 8A 42      [16]   49     ld (_entity_pend), hl        ;; pointer to last = pointer to first
+   42A6 21 7C 42      [10]   48     ld hl, #_entity_array       ;; hl = pointer to first
+   42A9 22 7A 42      [16]   49     ld (_entity_pend), hl        ;; pointer to last = pointer to first
                              50 
-   42BC C9            [10]   51     ret
+   42AC C9            [10]   51     ret
                              52     
                              53 
                              54 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5183,20 +5183,20 @@ Hexadecimal [16-Bits]
                              61 ;;  RETURN:
                              62 ;;      DE: points to added element
                              63 ;;      BC: size of entity
-   42BD                      64 man_entity_new::
+   42AD                      64 man_entity_new::
                              65     ;; Num entities + 1
-   42BD 21 89 42      [10]   66     ld hl, #_entity_num
-   42C0 34            [11]   67     inc (hl)
+   42AD 21 79 42      [10]   66     ld hl, #_entity_num
+   42B0 34            [11]   67     inc (hl)
                              68 
                              69     ;;Increment array next pointer to the next
-   42C1 2A 8A 42      [16]   70     ld hl, (_entity_pend)       ; hl = pointer to last
-   42C4 54            [ 4]   71     ld d, h                     ; de = hl  (1)
-   42C5 5D            [ 4]   72     ld e, l                     ; de = hl  (2)
-   42C6 01 0A 00      [10]   73     ld bc, #sizeof_e            
-   42C9 09            [11]   74     add hl, bc                  ; hl = pointer to last + sizeofentity
-   42CA 22 8A 42      [16]   75     ld (_entity_pend), hl       ; pointer to last  += sizeofentity
+   42B1 2A 7A 42      [16]   70     ld hl, (_entity_pend)       ; hl = pointer to last
+   42B4 54            [ 4]   71     ld d, h                     ; de = hl  (1)
+   42B5 5D            [ 4]   72     ld e, l                     ; de = hl  (2)
+   42B6 01 0A 00      [10]   73     ld bc, #sizeof_e            
+   42B9 09            [11]   74     add hl, bc                  ; hl = pointer to last + sizeofentity
+   42BA 22 7A 42      [16]   75     ld (_entity_pend), hl       ; pointer to last  += sizeofentity
                              76 
-   42CD C9            [10]   77     ret
+   42BD C9            [10]   77     ret
                              78 
                              79 
                              80 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5215,21 +5215,21 @@ Hexadecimal [16-Bits]
 
 
 
-   42CE                      91 man_entity_create::
-   42CE E5            [11]   92     push hl                     ;; save pointer to the initialization
-   42CF CD BD 42      [17]   93     call man_entity_new         ;; add new entity on vector (not initialized) return DE added elemtn
+   42BE                      91 man_entity_create::
+   42BE E5            [11]   92     push hl                     ;; save pointer to the initialization
+   42BF CD AD 42      [17]   93     call man_entity_new         ;; add new entity on vector (not initialized) return DE added elemtn
                              94 
                              95     ;; ix = de
    0049                      96     ld__ixh_d                   ;; I = D (Undocummented opcode)
-   42D2 DD 62                 1    .dw #0x62DD  ;; Opcode for ld ixh, d
+   42C2 DD 62                 1    .dw #0x62DD  ;; Opcode for ld ixh, d
    004B                      97     ld__ixl_e                   ;; X = E  (Undocummented opcode) 
-   42D4 DD 6B                 1    .dw #0x6BDD  ;; Opcode for ld ixl, e
+   42C4 DD 6B                 1    .dw #0x6BDD  ;; Opcode for ld ixl, e
                              98 
                              99     ;; Copy initialization values to new entity
                             100     ;; DE points the new added entity
                             101     ;; BC holds size of entity
                             102     ;; HL pointer to inizialization 
-   42D6 E1            [10]  103     pop hl
-   42D7 ED B0         [21]  104     ldir                        ;; copy from hl to de the amount of bc
+   42C6 E1            [10]  103     pop hl
+   42C7 ED B0         [21]  104     ldir                        ;; copy from hl to de the amount of bc
                             105 
-   42D9 C9            [10]  106     ret
+   42C9 C9            [10]  106     ret

@@ -5041,19 +5041,19 @@ Hexadecimal [16-Bits]
                              10 ;DefineEntity player, 20, 20,  1, 1, 2, 8, 0xF0
                              11 ;DefineEntity enemy,  40, 80, -1, 0, 3, 12, 0xFF
                              12 
-   41A0                      13 _main::
+   4190                      13 _main::
                              14    ;;Disable firmware to prevent interfering
-   41A0 CD 7D 44      [17]   15    call cpct_disableFirmware_asm
+   4190 CD 6D 44      [17]   15    call cpct_disableFirmware_asm
                              16 
                              17    ;;Init game manager
-   41A3 CD F8 42      [17]   18    call man_game_init
+   4193 CD E8 42      [17]   18    call man_game_init
                              19 
                              20    ;;Loop forever
-   41A6                      21    loop:
-   41A6 CD 17 43      [17]   22       call man_game_update
-   41A9 CD 68 44      [17]   23       call cpct_waitVSYNC_asm
-   41AC CD 24 43      [17]   24       call man_game_render
-   41AF 18 F5         [12]   25       jr loop
+   4196                      21    loop:
+   4196 CD 07 43      [17]   22       call man_game_update
+   4199 CD 58 44      [17]   23       call cpct_waitVSYNC_asm
+   419C CD 14 43      [17]   24       call man_game_render
+   419F 18 F5         [12]   25       jr loop
                              26 
                              27 
                              28 

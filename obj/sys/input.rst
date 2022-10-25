@@ -5075,8 +5075,8 @@ Hexadecimal [16-Bits]
                              10 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                              11 ;;  SYS_INPUT INIT
                              12 ;;      Initializes input system
-   41B1                      13 sys_input_init::
-   41B1 C9            [10]   14 ret
+   41A1                      13 sys_input_init::
+   41A1 C9            [10]   14 ret
                              15 
                              16 
                              17 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5089,51 +5089,51 @@ Hexadecimal [16-Bits]
                              24 ;;  DESTROYS: AF, BC, DE, HL, IX
                              25 ;;Controls:: A (move down), Q(move up), O(move left), P(move right)
                              26 
-   41B2                      27 sys_input_update::
+   41A2                      27 sys_input_update::
                              28     ;;Reset velocity
-   41B2 DD 36 02 00   [19]   29     ld e_vx(ix), #0
-   41B6 DD 36 03 00   [19]   30     ld e_vy(ix), #0
+   41A2 DD 36 02 00   [19]   29     ld e_vx(ix), #0
+   41A6 DD 36 03 00   [19]   30     ld e_vy(ix), #0
                              31 
                              32     ;;Scan keyboard
-   41BA CD 2B 43      [17]   33     call cpct_scanKeyboard_f_asm
+   41AA CD 1B 43      [17]   33     call cpct_scanKeyboard_f_asm
                              34 
                              35     ;;Check for movement keys
-   41BD 21 04 04      [10]   36     ld hl, #Key_O                   ;; HL holds key "o" value
-   41C0 CD A8 43      [17]   37     call cpct_isKeyPressed_asm      ;; Check if key in HL is pressed
-   41C3 28 04         [12]   38     jr z, O_NotPressed              ;; if z, not pressed
+   41AD 21 04 04      [10]   36     ld hl, #Key_O                   ;; HL holds key "o" value
+   41B0 CD 98 43      [17]   37     call cpct_isKeyPressed_asm      ;; Check if key in HL is pressed
+   41B3 28 04         [12]   38     jr z, O_NotPressed              ;; if z, not pressed
                              39 
-   41C5                      40     O_Pressed:
-   41C5 DD 36 02 FF   [19]   41         ld e_vx(ix), #-1            ;; velocity x = -1
+   41B5                      40     O_Pressed:
+   41B5 DD 36 02 FF   [19]   41         ld e_vx(ix), #-1            ;; velocity x = -1
                              42 
-   41C9                      43     O_NotPressed:
-   41C9 21 03 08      [10]   44         ld hl, #Key_P                   ;; HL holds key "p" value
-   41CC CD A8 43      [17]   45         call cpct_isKeyPressed_asm      ;; Check if key in HL is pressed
-   41CF 28 04         [12]   46         jr z, P_NotPressed              ;; if z, not pressed
+   41B9                      43     O_NotPressed:
+   41B9 21 03 08      [10]   44         ld hl, #Key_P                   ;; HL holds key "p" value
+   41BC CD 98 43      [17]   45         call cpct_isKeyPressed_asm      ;; Check if key in HL is pressed
+   41BF 28 04         [12]   46         jr z, P_NotPressed              ;; if z, not pressed
                              47 
-   41D1                      48         P_Pressed:
-   41D1 DD 36 02 01   [19]   49             ld e_vx(ix), #1             ;; velocity x = 1
+   41C1                      48         P_Pressed:
+   41C1 DD 36 02 01   [19]   49             ld e_vx(ix), #1             ;; velocity x = 1
                              50         
-   41D5                      51         P_NotPressed:
-   41D5 21 08 08      [10]   52             ld hl, #Key_Q                   ;; HL holds key "q" value
-   41D8 CD A8 43      [17]   53             call cpct_isKeyPressed_asm      ;; Check if key in HL is pressed
-   41DB 28 04         [12]   54             jr z, Q_NotPressed              ;; if z, not pressed
+   41C5                      51         P_NotPressed:
+   41C5 21 08 08      [10]   52             ld hl, #Key_Q                   ;; HL holds key "q" value
+   41C8 CD 98 43      [17]   53             call cpct_isKeyPressed_asm      ;; Check if key in HL is pressed
+   41CB 28 04         [12]   54             jr z, Q_NotPressed              ;; if z, not pressed
                              55 
                              56 
-   41DD                      57             Q_Pressed:
-   41DD DD 36 03 FE   [19]   58                 ld e_vy(ix), #-2                ;; velocity y = -2
+   41CD                      57             Q_Pressed:
+   41CD DD 36 03 FE   [19]   58                 ld e_vy(ix), #-2                ;; velocity y = -2
                              59 
-   41E1                      60             Q_NotPressed:
-   41E1 21 08 20      [10]   61                 ld hl, #Key_A                   ;; HL holds key "a" value
-   41E4 CD A8 43      [17]   62                 call cpct_isKeyPressed_asm      ;; Check if key in HL is pressed
-   41E7 28 04         [12]   63                 jr z, A_NotPressed              ;; if z, not pressed
+   41D1                      60             Q_NotPressed:
+   41D1 21 08 20      [10]   61                 ld hl, #Key_A                   ;; HL holds key "a" value
+   41D4 CD 98 43      [17]   62                 call cpct_isKeyPressed_asm      ;; Check if key in HL is pressed
+   41D7 28 04         [12]   63                 jr z, A_NotPressed              ;; if z, not pressed
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 99.
 Hexadecimal [16-Bits]
 
 
 
                              64 
-   41E9                      65                 A_Pressed:
-   41E9 DD 36 03 02   [19]   66                     ld e_vy(ix), #2             ;; velocity y = 2  
+   41D9                      65                 A_Pressed:
+   41D9 DD 36 03 02   [19]   66                     ld e_vy(ix), #2             ;; velocity y = 2  
                              67 
-   41ED                      68                 A_NotPressed:
-   41ED C9            [10]   69                     ret
+   41DD                      68                 A_NotPressed:
+   41DD C9            [10]   69                     ret

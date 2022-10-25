@@ -7,11 +7,10 @@
 -k /home/cpc/cpctelera/cpctelera/tools/sdcc-3.6.8-r9946/share/sdcc/lib/z80
 -l /home/cpc/cpctelera/cpctelera/cpctelera.lib
 -l z80
-obj/assets/sprites/sword.rel
-obj/assets/sprites/redball.rel
-obj/assets/sprites/mainchar.rel
+obj/assets/sprites/enemy2.rel
+obj/assets/sprites/enemy.rel
+obj/assets/sprites/player.rel
 obj/assets/sprites/pal_main.rel
-obj/assets/sprites/_pal_main.rel
 obj/cpct_functions.h.rel
 obj/main.rel
 obj/sys/input.h.rel

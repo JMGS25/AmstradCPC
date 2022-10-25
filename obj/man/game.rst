@@ -5082,10 +5082,20 @@ Hexadecimal [16-Bits]
 
 
                               7 .include "assets/assets.h.s"
-                              1 .globl _pal_main
-                              2 .globl _sp_mainchar
-                              3 .globl _sp_redball
-                              4 .globl _sp_sword
+                              1 
+                              2 ;;==============================
+                              3 ;;  Sprites
+                              4 .globl _pal_main
+                              5 .globl _sp_player
+                              6 .globl _sp_enemy
+                              7 .globl _sp_enemy2
+                              8 
+                              9 
+                             10 
+                             11 ;;==============================
+                             12 ;;  Constants
+                     0008    13 MAIN_CHAR_WIDTH = 8
+                     0010    14 MAIN_CHAR_HEIGHT = 16
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 100.
 Hexadecimal [16-Bits]
 
@@ -5101,24 +5111,24 @@ Hexadecimal [16-Bits]
                              15 
                              16 ;;===========================================
                              17 ;; Manager MEMBER VARIABLES
-   0000                      18 ent1: DefineCmp_Entity 0, 0, 1, 2, 4, 16, _sp_mainchar
-   42DA 00 00                 1    .db 0, 0                   ; Position x, y
-   42DC 01 02                 2    .db 1, 2                 ; Velocity x, y
-   42DE 04 10                 3    .db 4, 16                   ; Width, height 
-   42E0 00 41                 4    .dw _sp_mainchar                    ; pointer to sprite             
-   42E2 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
-   000A                      19 ent2: DefineCmp_Entity 70, 40, 0xFF, 0xFE, 4, 8, _sp_redball
-   42E4 46 28                 1    .db 70, 40                   ; Position x, y
-   42E6 FF FE                 2    .db 0xFF, 0xFE                 ; Velocity x, y
-   42E8 04 08                 3    .db 4, 8                   ; Width, height 
-   42EA 80 40                 4    .dw _sp_redball                    ; pointer to sprite             
-   42EC 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
-   0014                      20 ent3: DefineCmp_Entity 40, 120, 2, 0xFC, 5, 12, _sp_sword
-   42EE 28 78                 1    .db 40, 120                   ; Position x, y
-   42F0 02 FC                 2    .db 2, 0xFC                 ; Velocity x, y
-   42F2 05 0C                 3    .db 5, 12                   ; Width, height 
-   42F4 00 40                 4    .dw _sp_sword                    ; pointer to sprite             
-   42F6 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
+   0000                      18 ent1: DefineCmp_Entity 0, 0, 1, 2, MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT, _sp_player
+   42CA 00 00                 1    .db 0, 0                   ; Position x, y
+   42CC 01 02                 2    .db 1, 2                 ; Velocity x, y
+   42CE 08 10                 3    .db MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT                   ; Width, height 
+   42D0 00 41                 4    .dw _sp_player                    ; pointer to sprite             
+   42D2 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
+   000A                      19 ent2: DefineCmp_Entity 70, 40, 0xFF, 0xFE, MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT, _sp_enemy
+   42D4 46 28                 1    .db 70, 40                   ; Position x, y
+   42D6 FF FE                 2    .db 0xFF, 0xFE                 ; Velocity x, y
+   42D8 08 10                 3    .db MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT                   ; Width, height 
+   42DA 80 40                 4    .dw _sp_enemy                    ; pointer to sprite             
+   42DC 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
+   0014                      20 ent3: DefineCmp_Entity 40, 120, 2, 0xFC, MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT, _sp_enemy2
+   42DE 28 78                 1    .db 40, 120                   ; Position x, y
+   42E0 02 FC                 2    .db 2, 0xFC                 ; Velocity x, y
+   42E2 08 10                 3    .db MAIN_CHAR_WIDTH, MAIN_CHAR_HEIGHT                   ; Width, height 
+   42E4 00 40                 4    .dw _sp_enemy2                    ; pointer to sprite             
+   42E6 00 C0                 5    .dw 0xC000                   ; last video memory value (for optimization)(default value) 
                              21 ;;===========================================
                              22 
                              23 
@@ -5130,41 +5140,41 @@ Hexadecimal [16-Bits]
                              29 ;;  Initializes game manager to be used
                              30 ;; 
                              31 ;;  DESTROYS : AF, BC, DE, HL, IX
-   42F8                      32 man_game_init::
+   42E8                      32 man_game_init::
                              33     ;;Init entity manager
-   42F8 CD B2 42      [17]   34     call man_entity_init
+   42E8 CD A2 42      [17]   34     call man_entity_init
                              35 
                              36     ;;Init systems
-   42FB CD 31 42      [17]   37     call sys_eren_init
-   42FE CD EE 41      [17]   38     call sys_physics_init
-   4301 CD B1 41      [17]   39     call sys_input_init
+   42EB CD 21 42      [17]   37     call sys_eren_init
+   42EE CD DE 41      [17]   38     call sys_physics_init
+   42F1 CD A1 41      [17]   39     call sys_input_init
                              40 
                              41     ;;Init 3 Test entities
-   4304 21 DA 42      [10]   42     ld hl, #ent1
-   4307 CD CE 42      [17]   43     call man_entity_create
-   430A 21 E4 42      [10]   44     ld hl, #ent2
-   430D CD CE 42      [17]   45     call man_entity_create
-   4310 21 EE 42      [10]   46     ld hl, #ent3
-   4313 CD CE 42      [17]   47     call man_entity_create
+   42F4 21 CA 42      [10]   42     ld hl, #ent1
+   42F7 CD BE 42      [17]   43     call man_entity_create
+   42FA 21 D4 42      [10]   44     ld hl, #ent2
+   42FD CD BE 42      [17]   45     call man_entity_create
+   4300 21 DE 42      [10]   46     ld hl, #ent3
+   4303 CD BE 42      [17]   47     call man_entity_create
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 101.
 Hexadecimal [16-Bits]
 
 
 
-   4316 C9            [10]   48     ret
+   4306 C9            [10]   48     ret
                              49 
                              50 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                              51 ;; MAN GAME UPDATE
                              52 ;;  Updates 1 game cycle doing everything but rendering
                              53 ;; 
                              54 
-   4317                      55 man_game_update::
-   4317 CD AA 42      [17]   56     call man_entity_getArray
-   431A CD B2 41      [17]   57     call sys_input_update
-   431D CD AA 42      [17]   58     call man_entity_getArray
-   4320 CD EF 41      [17]   59     call sys_physics_update
+   4307                      55 man_game_update::
+   4307 CD 9A 42      [17]   56     call man_entity_getArray
+   430A CD A2 41      [17]   57     call sys_input_update
+   430D CD 9A 42      [17]   58     call man_entity_getArray
+   4310 CD DF 41      [17]   59     call sys_physics_update
                              60 
-   4323 C9            [10]   61     ret
+   4313 C9            [10]   61     ret
                              62 
                              63 
                              64 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5172,9 +5182,9 @@ Hexadecimal [16-Bits]
                              66 ;;  Renders game
                              67 ;; 
                              68 
-   4324                      69 man_game_render::
-   4324 CD AA 42      [17]   70     call man_entity_getArray
-   4327 CD 46 42      [17]   71     call sys_eren_update
+   4314                      69 man_game_render::
+   4314 CD 9A 42      [17]   70     call man_entity_getArray
+   4317 CD 36 42      [17]   71     call sys_eren_update
                              72 
-   432A C9            [10]   73     ret
+   431A C9            [10]   73     ret
                              74 

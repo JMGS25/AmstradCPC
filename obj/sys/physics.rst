@@ -5063,8 +5063,8 @@ Hexadecimal [16-Bits]
                              17 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                              18 ;;  SYS_PHYSICS INIT
                              19 ;;      Initializes physics system
-   41EE                      20 sys_physics_init::
-   41EE C9            [10]   21     ret
+   41DE                      20 sys_physics_init::
+   41DE C9            [10]   21     ret
                              22 
                              23 
                              24 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5077,59 +5077,59 @@ Hexadecimal [16-Bits]
                              31 ;;       A: number of elements in the array
                              32 ;;  DESTROYS: AF, BC, DE, IX
                              33 ;;  Stack Use: 2bytes
-   41EF                      34 sys_physics_update::
-   41EF 47            [ 4]   35     ld b, a         ;; b = num entities
+   41DF                      34 sys_physics_update::
+   41DF 47            [ 4]   35     ld b, a         ;; b = num entities
                              36 
-   41F0                      37     _update_loop:
+   41E0                      37     _update_loop:
                              38     
                              39     ;;Update X
-   41F0 3E 51         [ 7]   40     ld a, #screen_width + 1
-   41F2 DD 96 04      [19]   41     sub e_w(ix)                 ;;a = screen_width - spritew 
-   41F5 4F            [ 4]   42     ld c,a                      ;;c = max screen_width without touching border
+   41E0 3E 51         [ 7]   40     ld a, #screen_width + 1
+   41E2 DD 96 04      [19]   41     sub e_w(ix)                 ;;a = screen_width - spritew 
+   41E5 4F            [ 4]   42     ld c,a                      ;;c = max screen_width without touching border
                              43 
-   41F6 DD 7E 00      [19]   44     ld a, e_x(ix)               ;; A = entity.x
-   41F9 DD 86 02      [19]   45     add e_vx(ix)                ;; A = entity.x + entity.vx
-   41FC B9            [ 4]   46     cp c                        ;; c - a === max - new position
-   41FD 30 05         [12]   47     jr nc, invalid_x            ;; if (c-a < 0) invalid
+   41E6 DD 7E 00      [19]   44     ld a, e_x(ix)               ;; A = entity.x
+   41E9 DD 86 02      [19]   45     add e_vx(ix)                ;; A = entity.x + entity.vx
+   41EC B9            [ 4]   46     cp c                        ;; c - a === max - new position
+   41ED 30 05         [12]   47     jr nc, invalid_x            ;; if (c-a < 0) invalid
                              48 
-   41FF                      49     valid_x: 
-   41FF DD 77 00      [19]   50         ld e_x(ix), a
-   4202 18 08         [12]   51         jr endif_x
+   41EF                      49     valid_x: 
+   41EF DD 77 00      [19]   50         ld e_x(ix), a
+   41F2 18 08         [12]   51         jr endif_x
                              52 
-   4204                      53     invalid_x:                  ;;Fix position by changing velocity sign to bounce in wall
-   4204 DD 7E 02      [19]   54         ld a, e_vx(ix)
-   4207 ED 44         [ 8]   55         neg                     
-   4209 DD 77 02      [19]   56         ld e_vx(ix), a          ;; Entity.vx = - Entity.vx
+   41F4                      53     invalid_x:                  ;;Fix position by changing velocity sign to bounce in wall
+   41F4 DD 7E 02      [19]   54         ld a, e_vx(ix)
+   41F7 ED 44         [ 8]   55         neg                     
+   41F9 DD 77 02      [19]   56         ld e_vx(ix), a          ;; Entity.vx = - Entity.vx
                              57 
-   420C                      58     endif_x:  
+   41FC                      58     endif_x:  
                              59         ;;Update Y  
-   420C 3E C9         [ 7]   60         ld a, #screen_height + 1     
-   420E DD 96 05      [19]   61         sub e_h(ix)                 ;;a = screen_height - sprite_h
-   4211 4F            [ 4]   62         ld c,a                      ;;c = max screen_height without touching border
+   41FC 3E C9         [ 7]   60         ld a, #screen_height + 1     
+   41FE DD 96 05      [19]   61         sub e_h(ix)                 ;;a = screen_height - sprite_h
+   4201 4F            [ 4]   62         ld c,a                      ;;c = max screen_height without touching border
                              63 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 98.
 Hexadecimal [16-Bits]
 
 
 
-   4212 DD 7E 01      [19]   64         ld a, e_y(ix)               ;; A = entity.y
-   4215 DD 86 03      [19]   65         add e_vy(ix)                ;; A = entity.y + entity.vy
-   4218 B9            [ 4]   66         cp c                        ;; c - a === max - new position
-   4219 30 05         [12]   67         jr nc, invalid_y            ;; if (c-a < 0) invalid
+   4202 DD 7E 01      [19]   64         ld a, e_y(ix)               ;; A = entity.y
+   4205 DD 86 03      [19]   65         add e_vy(ix)                ;; A = entity.y + entity.vy
+   4208 B9            [ 4]   66         cp c                        ;; c - a === max - new position
+   4209 30 05         [12]   67         jr nc, invalid_y            ;; if (c-a < 0) invalid
                              68 
-   421B                      69         valid_y:
-   421B DD 77 01      [19]   70             ld e_y(ix),a 
-   421E 18 08         [12]   71             jr endif_y
+   420B                      69         valid_y:
+   420B DD 77 01      [19]   70             ld e_y(ix),a 
+   420E 18 08         [12]   71             jr endif_y
                              72         
-   4220                      73         invalid_y:
-   4220 DD 7E 03      [19]   74             ld a, e_vy(ix)
-   4223 ED 44         [ 8]   75             neg 
-   4225 DD 77 03      [19]   76             ld e_vy(ix), a          ;; Entity.vy = - Entity.vy
+   4210                      73         invalid_y:
+   4210 DD 7E 03      [19]   74             ld a, e_vy(ix)
+   4213 ED 44         [ 8]   75             neg 
+   4215 DD 77 03      [19]   76             ld e_vy(ix), a          ;; Entity.vy = - Entity.vy
                              77 
-   4228                      78         endif_y:
-   4228 05            [ 4]   79             dec b                   ;;entities_left --
-   4229 C8            [11]   80             ret z                   ;; if 0 entities_left = end
+   4218                      78         endif_y:
+   4218 05            [ 4]   79             dec b                   ;;entities_left --
+   4219 C8            [11]   80             ret z                   ;; if 0 entities_left = end
                              81 
-   422A 11 0A 00      [10]   82             ld de, #sizeof_e
-   422D DD 19         [15]   83             add ix, de              ;; ix points next entity
-   422F 18 BF         [12]   84             jr _update_loop         
+   421A 11 0A 00      [10]   82             ld de, #sizeof_e
+   421D DD 19         [15]   83             add ix, de              ;; ix points next entity
+   421F 18 BF         [12]   84             jr _update_loop         
