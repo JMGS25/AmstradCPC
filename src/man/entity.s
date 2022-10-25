@@ -2,60 +2,105 @@
 ;;; ENITTY MANAGER
 ;;;
 .include "man/entity.h.s"
+.include "cpctelera.h.s"
+.include "cmp/array_structure.h.s"
+.include "cmp/entity.h.s"
+
+.module entity_manager
 max_entities == 3 ; putting == means constant
 
 
-_num_entities::     .db 0                               ; reserve a byte 0-valued
-_last_elem_ptr::    .dw _entity_array                   ; pointer to last element
 
-DefineEntityArray   _entity_array, max_entities         ; pre-create array
+;;===========================================================================
+;;  Manager Member variables
 
+;; -----------------Entity components-------------------
+DefineComponentArrayStructure _entity, max_entities, DefineCmp_Entity_default
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;  GET ENTITY ARRAY IX
-;;     Loads in IX register array beginning direction
-;;
-;;  RETURN
-;;      IX : array beginning direction
-man_entity_getEntityArray_IX::
-    ld ix, #_entity_array
-    ret
+;;===========================================================================
+;;===========================================================================
+;;  Manager Public functions
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;  GET NUM ENTITIES
-;;     Loads in A register number of alive entities
+;;  MAN GET ARRAY
+;;      Loads in A register number of alive entities
+;;      Loads in IX register array beginning direction
 ;;
 ;;  RETURN
 ;;      A : alive entities
-man_entity_getNumEntities_A::
-    ld a, (_num_entities)
+;;      IX: pointer to the entity array
+man_entity_getArray::
+    ld ix, #_entity_array   ;; IX = pointer to the entity array
+    ld a, (_entity_num)   ;; A  = number of entities
     ret 
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;  CREATE ENTITY
-;;     Loads in A register number of alive entities
-;;  INPUT
-;;      HL : Pointer to entity initializer bytes (template)
+;;  MAN ENTITY INIT
+;;     Set up everything with 0 entities and ready to create new ones
+;;     Using it makes able to re-game 
+;;  
+;;  DESTROYS:  AH, HL
+man_entity_init::
+    xor a                       ;; a = 0
+    ld  (_entity_num), a        ;; value num_entities = 0
 
+    ld hl, #_entity_array       ;; hl = pointer to first
+    ld (_entity_pend), hl        ;; pointer to last = pointer to first
+
+    ret
+    
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  MAN ENTITY NEW
+;; ------------------------------------------------------------
+;;      Adds new component to the array without initializing
+;;  INPUT:
+;;      HL: Pointer to initializer values for the entity to be created
+;;  DESTROYS:  F, BC, HL, DE
+;;  RETURN:
+;;      DE: points to added element
+;;      BC: size of entity
+man_entity_new::
+    ;; Num entities + 1
+    ld hl, #_entity_num
+    inc (hl)
+
+    ;;Increment array next pointer to the next
+    ld hl, (_entity_pend)       ; hl = pointer to last
+    ld d, h                     ; de = hl  (1)
+    ld e, l                     ; de = hl  (2)
+    ld bc, #sizeof_e            
+    add hl, bc                  ; hl = pointer to last + sizeofentity
+    ld (_entity_pend), hl       ; pointer to last  += sizeofentity
+
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  MAN ENTITY CREATE
+;; ------------------------------------------------------------
+;;      Creates and initializes new entity
+;;      Return a pointer to newly created entity in IX
+;;  INPUT:
+;;      HL: Pointer to initializer values for the entity to be created
+;;  DESTROYS:  F, BC, HL, DE
+;;  STACK USE: 2 bytes
+;;  RETURN:
+;;      IX: Pointer to the entity created
 man_entity_create::
-    ;;Copy entity from template in HL
-    ;; memcpy
-    ld de, (_last_elem_ptr)
-    ld bc, #sizeof_e
-    ldir                     ; coge lo de HL, copia en DE tantos bytes como diga BC
+    push hl                     ;; save pointer to the initialization
+    call man_entity_new         ;; add new entity on vector (not initialized) return DE added elemtn
 
-    ;;Increment number of entities
-    ;; ++_num_entities
-    ld a, (_num_entities)
-    inc a
-    ld (_num_entities), a
+    ;; ix = de
+    ld__ixh_d                   ;; I = D (Undocummented opcode)
+    ld__ixl_e                   ;; X = E  (Undocummented opcode) 
 
-    ;; Set last element pointer to next position 
-    ;; last_element_pointer += sizeof_e
-    ld hl, (_last_elem_ptr)
-    ld bc, #sizeof_e
-    add hl, bc
-    ld (_last_elem_ptr), hl
+    ;; Copy initialization values to new entity
+    ;; DE points the new added entity
+    ;; BC holds size of entity
+    ;; HL pointer to inizialization 
+    pop hl
+    ldir                        ;; copy from hl to de the amount of bc
 
     ret

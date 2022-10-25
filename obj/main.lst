@@ -4989,73 +4989,32 @@ Hexadecimal [16-Bits]
 
 
 
-                              2 .include "man/entity.h.s"
-                              1 ;;;
-                              2 ;;; ENTITY MANAGER
-                              3 ;;;
-                              4 
-                              5 
-                              6 ;;PUBLIC FUNCTIONS
-                              7 .globl man_entity_getEntityArray_IX
-                              8 .globl man_entity_getNumEntities_A
-                              9 .globl man_entity_create
-                             10 
-                             11 ;; CONSTANTS
-                             12 ;.globl entity_size
-                             13 
-                             14 ;; Entity DEFINITION MACRO
-                             15 ;; using a macro allows changing order more easily 
-                             16 .macro DefineEntityAnnonimous _x, _y, _vx, _vy, _w, _h, _color
-                             17    .db _x 
-                             18    .db _y 
-                             19    .db _w 
-                             20    .db _h
-                             21    .db _vx 
-                             22    .db _vy 
-                             23    .db _color
-                             24 .endm
-                             25 
-                             26 .macro DefineEntity _name, _x, _y, _vx, _vy, _w, _h, _color
-                             27     _name::
-                             28         DefineEntityAnnonimous _x, _y, _vx, _vy, _w, _h, _color
-                             29 .endm
-                             30 
-                     0000    31 e_x = 0
-                     0001    32 e_y = 1
-                     0002    33 e_w = 2
-                     0003    34 e_h = 3
-                     0004    35 e_vx = 4
-                     0005    36 e_vy = 5
-                     0006    37 e_col = 6
-                     0007    38 sizeof_e = 7
-                             39 
-                             40 
-                             41 .macro DefineEntityArray _name, _N
-                             42     _name::
-                             43         .rept _N
-                             44             DefineEntityAnnonimous 0xDE, 0xAD, 0xDE, 0xAD, 0xDE, 0xAD, 0xAA ;;code initial : DEAD DEAD DEAD
-                             45         .endm
-                             46 .endm
+                              2 ;.include "man/entity.h.s"
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 95.
 Hexadecimal [16-Bits]
 
 
 
-                              3 .include "sys/render.h.s"
+                              3 .include "man/game.h.s"
                               1 ;;;
-                              2 ;;; RENDER SYSTEM
+                              2 ;;; GAME MANAGER
                               3 ;;;
                               4 
-                              5 ;;PUBLIC FUNCTIONS
-                              6 .globl sys_render_update
-                              7 .globl sys_render_init
-                              8 
+                              5 .globl man_game_init
+                              6 .globl man_game_render
+                              7 .globl man_game_update
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 96.
 Hexadecimal [16-Bits]
 
 
 
-                              4 .include "cpct_functions.h.s"
+                              4 ;.include "sys/render.h.s"
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 97.
+Hexadecimal [16-Bits]
+
+
+
+                              5 .include "cpct_functions.h.s"
                               1 ;;;
                               2 ;;; CPCTELERA FUNCTIONS
                               3 ;;;
@@ -5063,49 +5022,39 @@ Hexadecimal [16-Bits]
                               5 .globl cpct_getScreenPtr_asm
                               6 .globl cpct_drawSolidBox_asm
                               7 .globl cpct_disableFirmware_asm
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 97.
+                              8 .globl cpct_waitVSYNC_asm
+                              9 .globl cpct_scanKeyboard_f_asm
+                             10 .globl cpct_drawSprite_asm
+                             11 .globl cpct_setPalette_asm
+                             12 .globl cpct_setVideoMode_asm
+                             13 .globl cpct_scanKeyboard_f_asm
+                             14 .globl cpct_isKeyPressed_asm
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 98.
 Hexadecimal [16-Bits]
 
 
 
-                              5 .area _DATA
-                              6 .area _CODE
-                              7 
-   0000                       8 DefineEntity player, 20, 20,  1, 1, 2, 8, 0xF0
-   0000                       1     player::
-   0000                       2         DefineEntityAnnonimous 20, 20, 1, 1, 2, 8, 0xF0
-   0000 14                    1    .db 20 
-   0001 14                    2    .db 20 
-   0002 02                    3    .db 2 
-   0003 08                    4    .db 8
-   0004 01                    5    .db 1 
-   0005 01                    6    .db 1 
-   0006 F0                    7    .db 0xF0
-   0007                       9 DefineEntity enemy,  40, 80, -1, 0, 3, 12, 0xFF
-   0007                       1     enemy::
-   0007                       2         DefineEntityAnnonimous 40, 80, -1, 0, 3, 12, 0xFF
-   0007 28                    1    .db 40 
-   0008 50                    2    .db 80 
-   0009 03                    3    .db 3 
-   000A 0C                    4    .db 12
-   000B FF                    5    .db -1 
-   000C 00                    6    .db 0 
-   000D FF                    7    .db 0xFF
-                             10 
-   000E                      11 _main::
-                             12    ;;Disable firmware to prevent interfering
-   000E CD 00 00      [17]   13    call cpct_disableFirmware_asm
-                             14 
-                             15    ;;Init systems
-   0011 CD 00 00      [17]   16    call sys_render_init
-                             17 
-   0014 21 00 00      [10]   18    ld hl, #player    ; hl = direccion de memoria
-   0017 CD 00 00      [17]   19    call man_entity_create
-   001A 21 07 00      [10]   20    ld hl, #enemy
-   001D CD 00 00      [17]   21    call man_entity_create
-                             22 
-   0020                      23    loop:
-   0020 CD 00 00      [17]   24       call man_entity_getEntityArray_IX
-   0023 CD 00 00      [17]   25       call man_entity_getNumEntities_A
-   0026 CD 00 00      [17]   26       call sys_render_update
-   0029 18 F5         [12]   27       jr loop
+                              6 
+                              7 .area _DATA
+                              8 .area _CODE
+                              9 
+                             10 ;DefineEntity player, 20, 20,  1, 1, 2, 8, 0xF0
+                             11 ;DefineEntity enemy,  40, 80, -1, 0, 3, 12, 0xFF
+                             12 
+   0000                      13 _main::
+                             14    ;;Disable firmware to prevent interfering
+   0000 CD 00 00      [17]   15    call cpct_disableFirmware_asm
+                             16 
+                             17    ;;Init game manager
+   0003 CD 00 00      [17]   18    call man_game_init
+                             19 
+                             20    ;;Loop forever
+   0006                      21    loop:
+   0006 CD 00 00      [17]   22       call man_game_update
+   0009 CD 00 00      [17]   23       call cpct_waitVSYNC_asm
+   000C CD 00 00      [17]   24       call man_game_render
+   000F 18 F5         [12]   25       jr loop
+                             26 
+                             27 
+                             28 
+                             29    

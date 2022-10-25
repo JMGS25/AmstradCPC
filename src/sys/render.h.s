@@ -3,6 +3,7 @@
 ;;;
 
 ;;PUBLIC FUNCTIONS
-.globl sys_render_update
-.globl sys_render_init
+.globl sys_eren_init
+.globl sys_eren_update
+.globl sys_eren_render_entities
 

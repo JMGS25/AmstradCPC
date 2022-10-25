@@ -8,6 +8,7 @@ Hexadecimal [16-Bits]
                               3 ;;;
                               4 
                               5 ;;PUBLIC FUNCTIONS
-                              6 .globl sys_render_update
-                              7 .globl sys_render_init
-                              8 
+                              6 .globl sys_eren_init
+                              7 .globl sys_eren_update
+                              8 .globl sys_eren_render_entities
+                              9 

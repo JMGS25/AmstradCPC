@@ -10,3 +10,10 @@ Hexadecimal [16-Bits]
                               5 .globl cpct_getScreenPtr_asm
                               6 .globl cpct_drawSolidBox_asm
                               7 .globl cpct_disableFirmware_asm
+                              8 .globl cpct_waitVSYNC_asm
+                              9 .globl cpct_scanKeyboard_f_asm
+                             10 .globl cpct_drawSprite_asm
+                             11 .globl cpct_setPalette_asm
+                             12 .globl cpct_setVideoMode_asm
+                             13 .globl cpct_scanKeyboard_f_asm
+                             14 .globl cpct_isKeyPressed_asm
